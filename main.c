@@ -75,6 +75,8 @@ int main() {
 /**
 * @brief Calibra a medida de um sensor.
 * 
+* A função utiliza a fórmula: medida corrigida = ganho * medida + offset para calibrar a medida do sensor
+* 
 * @param Sensor* sensor Sensor que terá a medida calibrada.
 */
 void calibrar_sensor(struct Sensor* sensor) {
