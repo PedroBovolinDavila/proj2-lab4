@@ -11,8 +11,8 @@ struct Sensor {
 
 void calibrar_sensor(struct Sensor* sensor);
 void mostrar_sensor(const struct Sensor sensor, int numero_sensor);
-double calcular_media(const struct Sensor sensores[], int qtd_sensores);
-int indice_maior(const struct Sensor sensores[], int qtd_sensores);
+double calcular_media(const struct Sensor* sensores, int qtd_sensores);
+int indice_maior(const struct Sensor* sensores, int qtd_sensores);
 
 int main() {
 	struct Sensor sensores[MAX_SENSORES];
@@ -27,12 +27,18 @@ int main() {
 	for (int i = 0; i < qtd_sensores; i++) {
 		printf("Sensor %d\n", i + 1);
 
-		printf("\tCanal: ");
-		scanf_s("%d", &sensores[i].canal);
-		printf("\tGanho: ");
-		scanf_s("%lf", &sensores[i].ganho);
-		printf("\tOffset: ");
-		scanf_s("%lf", &sensores[i].offset);
+		do {
+			printf("\tCanal (0 ou 1): ");
+			scanf_s("%d", &sensores[i].canal);
+		} while (sensores[i].canal != 0 && sensores[i].canal != 1);
+		do {
+			printf("\tGanho (entre 10 V e 10.4 V): ");
+			scanf_s("%lf", &sensores[i].ganho);
+		} while (sensores[i].ganho < 10 || sensores[i].ganho > 10.4);
+		do {
+			printf("\tOffset (entre -1 e 1): ");
+			scanf_s("%lf", &sensores[i].offset);
+		} while (sensores[i].offset < -1 || sensores[i].offset > 1);
 		printf("\tMedida: ");
 		scanf_s("%lf", &sensores[i].medida);
 	}
@@ -78,7 +84,7 @@ void mostrar_sensor(const struct Sensor sensor, int numero_sensor) {
 	printf("\tMedida: %.2lf\n", sensor.medida);
 }
 
-double calcular_media(const struct Sensor sensores[], int qtd_sensores) {
+double calcular_media(const struct Sensor* sensores, int qtd_sensores) {
 	double temp = 0;
 	for (int i = 0; i < qtd_sensores; i++) {
 		temp += sensores[i].medida;
@@ -87,7 +93,7 @@ double calcular_media(const struct Sensor sensores[], int qtd_sensores) {
 	return temp / qtd_sensores;
 }
 
-int indice_maior(const struct Sensor sensores[], int qtd_sensores) {
+int indice_maior(const struct Sensor* sensores, int qtd_sensores) {
 	int temp = 0;
 	for (int i = 0; i < qtd_sensores; i++) {
 		if (sensores[temp].medida < sensores[i].medida) temp = i;
