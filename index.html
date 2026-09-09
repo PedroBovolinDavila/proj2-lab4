@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentacao - Calibracao de Sensores</title>
+    <style>
+        body {
+            font-family: 'Arial', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: #e67e22;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            font-family: Consolas, 'Courier New', monospace;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+
+        .struct-details {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #bce8f1;
+        }
+
+            .struct-details ul {
+                list-style-type: square;
+            }
+
+        .function-card {
+            background: #fff;
+            border: 1px solid #dfe6e9;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+            .function-card:hover {
+                box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+                border-color: #b2bec3;
+            }
+
+        .function-signature {
+            font-family: Consolas, monospace;
+            font-size: 1.1em;
+            color: #c0392b;
+            background: #fdf2e9;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 0;
+            word-break: break-all;
+        }
+
+        .params {
+            margin-top: 15px;
+        }
+
+            .params dt {
+                font-weight: bold;
+                color: #27ae60;
+                font-family: Consolas, monospace;
+            }
+
+            .params dd {
+                margin-left: 20px;
+                margin-bottom: 10px;
+                color: #555;
+            }
+
+        .return-val {
+            font-weight: bold;
+            color: #8e44ad;
+            margin-top: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #ecf0f1;
+            color: #7f8c8d;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Documentacao do Sistema de Calibracao</h1>
+
+        <p>Esta documentacao descreve o funcionamento do codigo em C responsavel por ler, calibrar e calcular estatisticas de um conjunto de ate 10 sensores. O sistema permite a entrada manual de dados de sensores, realiza correcoes de medidas com base em ganho e offset, e apresenta a media antes e depois da calibracao, bem como o sensor com a maior medida aferida.</p>
+
+        <h2>Estruturas de Dados e Constantes</h2>
+
+        <div class="code-block">
+            #define MAX_SENSORES 10
+        </div>
+        <p>Define o limite maximo de sensores que o programa pode processar simultaneamente.</p>
+
+        <div class="struct-details">
+            <h3><code>struct Sensor</code></h3>
+            <p>Estrutura utilizada para armazenar os dados de cada sensor individualmente. Contem os seguintes campos:</p>
+            <ul>
+                <li><strong><code>canal</code></strong> (int): O canal do sensor (0 ou 1).</li>
+                <li><strong><code>ganho</code></strong> (double): O ganho aplicado na calibracao (deve estar entre 10V e 10.4V).</li>
+                <li><strong><code>offset</code></strong> (double): O valor de compensacao (entre -1 e 1).</li>
+                <li><strong><code>medida</code></strong> (double): A medida atual registrada pelo sensor (bruta ou calibrada).</li>
+            </ul>
+        </div>
+
+        <h2>Funcoes</h2>
+
+        <!-- calibrar_sensor -->
+        <div class="function-card">
+            <h3 class="function-signature">void calibrar_sensor(struct Sensor* sensor)</h3>
+            <p><strong>Descricao:</strong> Calibra a medida de um sensor especifico.</p>
+            <p>
+                A funcao utiliza a formula matematica: <br>
+                <code>medida_corrigida = (ganho * medida) + offset</code> <br>
+                para atualizar o valor da medida diretamente no endereco de memoria do sensor passado.
+            </p>
+            <div class="params">
+                <strong>Parametros:</strong>
+                <dl>
+                    <dt>sensor</dt>
+                    <dd><code>struct Sensor*</code> - Ponteiro para o sensor que tera a medida calibrada.</dd>
+                </dl>
+            </div>
+            <div class="return-val">
+                Retorno: <span class="tag">void</span> (Nenhum valor retornado, alteracao feita por referencia).
+            </div>
+        </div>
+
+        <!-- mostrar_sensor -->
+        <div class="function-card">
+            <h3 class="function-signature">void mostrar_sensor(const struct Sensor sensor, int numero_sensor)</h3>
+            <p><strong>Descricao:</strong> Mostra os detalhes de um sensor no console.</p>
+            <p>A funcao recebe uma copia de um sensor e o seu número de identificacao, exibindo suas propriedades (canal, ganho, offset e medida) em uma formatacao padronizada e legivel.</p>
+            <div class="params">
+                <strong>Parametros:</strong>
+                <dl>
+                    <dt>sensor</dt>
+                    <dd><code>const struct Sensor</code> - Estrutura do sensor que sera mostrada na tela.</dd>
+                    <dt>numero_sensor</dt>
+                    <dd><code>int</code> - Número de identificacao/ordem do sensor para exibicao.</dd>
+                </dl>
+            </div>
+            <div class="return-val">
+                Retorno: <span class="tag">void</span> (Imprime os dados no console).
+            </div>
+        </div>
+
+        <!-- calcular_media -->
+        <div class="function-card">
+            <h3 class="function-signature">double calcular_media(const struct Sensor* sensores, int qtd_sensores)</h3>
+            <p><strong>Descricao:</strong> Calcula a media aritmetica das medidas dos sensores.</p>
+            <p>A funcao percorre o vetor de sensores fornecido, acumulando a soma de todas as medidas em uma variavel temporaria. Ao final, divide essa soma pela quantidade de sensores para obter a media.</p>
+            <div class="params">
+                <strong>Parametros:</strong>
+                <dl>
+                    <dt>sensores</dt>
+                    <dd><code>const struct Sensor*</code> - Vetor contendo os sensores avaliados.</dd>
+                    <dt>qtd_sensores</dt>
+                    <dd><code>int</code> - Quantidade de elementos validos no vetor de sensores.</dd>
+                </dl>
+            </div>
+            <div class="return-val">
+                Retorno: <span class="tag">double</span> - O valor numerico correspondente a media aritmetica das medidas.
+            </div>
+        </div>
+
+        <!-- indice_maior -->
+        <div class="function-card">
+            <h3 class="function-signature">int indice_maior(const struct Sensor* sensores, int qtd_sensores)</h3>
+            <p><strong>Descricao:</strong> Retorna o indice do sensor com a maior medida registrada.</p>
+            <p>A funcao percorre o vetor de sensores e compara sequencialmente as medidas. Armazena o indice do sensor que possui o maior valor de medida encontrado durante o loop.</p>
+            <div class="params">
+                <strong>Parametros:</strong>
+                <dl>
+                    <dt>sensores</dt>
+                    <dd><code>const struct Sensor*</code> - Vetor contendo os sensores que serao avaliados.</dd>
+                    <dt>qtd_sensores</dt>
+                    <dd><code>int</code> - Quantidade de elementos validos no vetor de sensores.</dd>
+                </dl>
+            </div>
+            <div class="return-val">
+                Retorno: <span class="tag">int</span> - O indice numerico (base 0) do elemento no vetor que possui a maior medida.
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

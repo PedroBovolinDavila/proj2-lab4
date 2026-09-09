@@ -120,15 +120,15 @@ double calcular_media(const struct Sensor* sensores, int qtd_sensores) {
 }
 
 /**
- * @brief Retorna o índice do sensor com maior medida.
- *
- * A função percorre o vetor de sensores e verifica qual possui maior medida. Ao final, retorna o índice deste elemento.
- *
- * @param Sensores* sensores Vetor de sensores.
- * @param int qtd_sensores Quantidade de sensores no vetor.
- * 
- * @return int Indice do elemento que possui maior medida.
- */
+* @brief Retorna o índice do sensor com maior medida.
+*
+* A função percorre o vetor de sensores e verifica qual possui maior medida. Ao final, retorna o índice deste elemento.
+*
+* @param Sensores* sensores Vetor de sensores.
+* @param int qtd_sensores Quantidade de sensores no vetor.
+* 
+* @return int Indice do elemento que possui maior medida.
+*/
 int indice_maior(const struct Sensor* sensores, int qtd_sensores) {
 	int temp = 0;
 	for (int i = 0; i < qtd_sensores; i++) {
