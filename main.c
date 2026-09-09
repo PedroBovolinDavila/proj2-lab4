@@ -13,6 +13,7 @@ void calibrar_sensor(struct Sensor* sensor);
 void mostrar_sensor(const struct Sensor sensor, int numero_sensor);
 double calcular_media(const struct Sensor* sensores, int qtd_sensores);
 int indice_maior(const struct Sensor* sensores, int qtd_sensores);
+void media_canal(const struct Sensor* sensores, double* medias, int qtd_sensores);
 
 int main() {
 	struct Sensor sensores[MAX_SENSORES];
@@ -68,6 +69,13 @@ int main() {
 	for (int i = 0; i < qtd_sensores; i++) {
 		mostrar_sensor(sensores[i], i + 1);
 	}
+	printf("\n");
+
+	double medias[2] = { 0, 0 };
+	media_canal(sensores, qtd_sensores, medias);
+
+	printf("Media canal 0: %.2lf\n", medias[0]);
+	printf("Media canal 1: %.2lf\n", medias[1]);
 
 	return 0;
 }
@@ -136,4 +144,22 @@ int indice_maior(const struct Sensor* sensores, int qtd_sensores) {
 	}
 
 	return temp;
+}
+
+void media_canal(const struct Sensor* sensores, double* medias, int qtd_sensores) {
+	int qtd_0 = 0, qtd_1 = 0;
+	double soma_0 = 0, soma_1 = 0;
+	for (int i = 0; i < qtd_sensores; i++) {
+		if (sensores[i].canal == 0) {
+			soma_0 += sensores[i].medida;
+			qtd_0++;
+		} 
+		if (sensores[i].canal == 1) {
+			soma_1 += sensores[i].medida;
+			qtd_1++;
+		}
+	}
+
+	medias[0] = soma_0 / qtd_0;
+	medias[1] = soma_1 / qtd_1;
 }
