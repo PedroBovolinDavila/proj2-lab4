@@ -1,70 +1,70 @@
-# Documentação do Sistema de Calibração
+# Sensor Calibration System Documentation
 
-Esta documentação descreve o funcionamento do código em C responsável por ler, calibrar e calcular estatísticas de um conjunto de até 10 sensores. O sistema permite a entrada manual de dados de sensores, realiza correções de medidas com base em ganho e offset, e apresenta a média antes e depois da calibração, bem como o sensor com a maior medida aferida.
+This documentation describes the operation of the C code responsible for reading, calibrating, and calculating statistics for a set of up to 10 sensors. The system allows manual data entry for sensors, performs measurement corrections based on gain and offset, and displays the average before and after calibration, as well as the sensor with the highest recorded measurement.
 
-## Estruturas de Dados e Constantes
+## Data Structures and Constants
 
 ```c
 #define MAX_SENSORES 10
 ```
-Define o limite máximo de sensores que o programa pode processar simultaneamente.
+Defines the maximum limit of sensors that the program can process simultaneously.
 
 ### `struct Sensor`
-Estrutura utilizada para armazenar os dados de cada sensor individualmente. Contém os seguintes campos:
-* **`canal`** (int): O canal do sensor (0 ou 1).
-* **`ganho`** (double): O ganho aplicado na calibração (deve estar entre 10V e 10.4V).
-* **`offset`** (double): O valor de compensação (entre -1 e 1).
-* **`medida`** (double): A medida atual registrada pelo sensor (bruta ou calibrada).
+Structure used to store data for each sensor individually. It contains the following fields:
+* **`canal`** (int): The sensor channel (0 or 1).
+* **`ganho`** (double): The gain applied during calibration (must be between 10V and 10.4V).
+* **`offset`** (double): The compensation value (between -1 and 1).
+* **`medida`** (double): The current measurement recorded by the sensor (raw or calibrated).
 
-## Funções
+## Functions
 
 ### `void calibrar_sensor(struct Sensor* sensor)`
-**Descrição:** Calibra a medida de um sensor específico.
+**Description:** Calibrates the measurement of a specific sensor.
 
-A função utiliza a fórmula matemática:  
-`medida_corrigida = (ganho * medida) + offset`  
-para atualizar o valor da medida diretamente no endereço de memória do sensor passado.
+The function uses the mathematical formula:  
+`corrected_measurement = (gain * measurement) + offset`  
+to update the measurement value directly at the memory address of the passed sensor.
 
-**Parâmetros:**
-* `sensor` (`struct Sensor*`) - Ponteiro para o sensor que terá a medida calibrada.
+**Parameters:**
+* `sensor` (`struct Sensor*`) - Pointer to the sensor that will have its measurement calibrated.
 
-**Retorno:** `void` (Nenhum valor retornado, alteração feita por referência).
+**Return:** `void` (No value returned, modification is done by reference).
 
 ---
 
 ### `void mostrar_sensor(const struct Sensor sensor, int numero_sensor)`
-**Descrição:** Mostra os detalhes de um sensor no console.
+**Description:** Displays the details of a sensor in the console.
 
-A função recebe uma cópia de um sensor e o seu número de identificação, exibindo suas propriedades (canal, ganho, offset e medida) em uma formatação padronizada e legível.
+The function receives a copy of a sensor and its identification number, displaying its properties (channel, gain, offset, and measurement) in a standardized and readable format.
 
-**Parâmetros:**
-* `sensor` (`const struct Sensor`) - Estrutura do sensor que será mostrada na tela.
-* `numero_sensor` (`int`) - Número de identificação/ordem do sensor para exibição.
+**Parameters:**
+* `sensor` (`const struct Sensor`) - Sensor structure to be displayed on the screen.
+* `numero_sensor` (`int`) - Identification/order number of the sensor for display purposes.
 
-**Retorno:** `void` (Imprime os dados no console).
+**Return:** `void` (Prints the data to the console).
 
 ---
 
 ### `double calcular_media(const struct Sensor* sensores, int qtd_sensores)`
-**Descrição:** Calcula a média aritmética das medidas dos sensores.
+**Description:** Calculates the arithmetic mean of the sensor measurements.
 
-A função percorre o vetor de sensores fornecido, acumulando a soma de todas as medidas em uma variável temporária. Ao final, divide essa soma pela quantidade de sensores para obter a média.
+The function iterates over the provided sensor array, accumulating the sum of all measurements in a temporary variable. Finally, it divides this sum by the quantity of sensors to obtain the average.
 
-**Parâmetros:**
-* `sensores` (`const struct Sensor*`) - Vetor contendo os sensores avaliados.
-* `qtd_sensores` (`int`) - Quantidade de elementos válidos no vetor de sensores.
+**Parameters:**
+* `sensores` (`const struct Sensor*`) - Array containing the evaluated sensors.
+* `qtd_sensores` (`int`) - Quantity of valid elements in the sensor array.
 
-**Retorno:** `double` - O valor numérico correspondente à média aritmética das medidas.
+**Return:** `double` - The numeric value corresponding to the arithmetic mean of the measurements.
 
 ---
 
 ### `int indice_maior(const struct Sensor* sensores, int qtd_sensores)`
-**Descrição:** Retorna o índice do sensor com a maior medida registrada.
+**Description:** Returns the index of the sensor with the highest recorded measurement.
 
-A função percorre o vetor de sensores e compara sequencialmente as medidas. Armazena o índice do sensor que possui o maior valor de medida encontrado durante o loop.
+The function iterates over the sensor array and sequentially compares the measurements. It stores the index of the sensor that has the highest measurement value found during the loop.
 
-**Parâmetros:**
-* `sensores` (`const struct Sensor*`) - Vetor contendo os sensores que serão avaliados.
-* `qtd_sensores` (`int`) - Quantidade de elementos válidos no vetor de sensores.
+**Parameters:**
+* `sensores` (`const struct Sensor*`) - Array containing the sensors to be evaluated.
+* `qtd_sensores` (`int`) - Quantity of valid elements in the sensor array.
 
-**Retorno:** `int` - O índice numérico (base 0) do elemento no vetor que possui a maior medida.
+**Return:** `int` - The numeric index (0-based) of the element in the array that has the highest measurement.
