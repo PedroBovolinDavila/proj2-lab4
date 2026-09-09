@@ -76,6 +76,14 @@ void calibrar_sensor(struct Sensor* sensor) {
 	sensor->medida = sensor->ganho * sensor->medida + sensor->offset;
 }
 
+/**
+* @brief Mostra um sensor no console.
+* 
+* A função recebe um sensor e o número dele e exibe no console em uma formatação padrão.
+* 
+* @param Sensor sensor Sensor que será mostrado
+* @param in numero_sensor Número do sensor que será mostrado na tela
+*/
 void mostrar_sensor(const struct Sensor sensor, int numero_sensor) {
 	printf("Sensor %d\n", numero_sensor);
 	printf("\tCanal: %d\n", sensor.canal);
@@ -84,6 +92,17 @@ void mostrar_sensor(const struct Sensor sensor, int numero_sensor) {
 	printf("\tMedida: %.2lf\n", sensor.medida);
 }
 
+/**
+* @brief Calcula a média das medidas dos sensores.
+* 
+* A função percorre o vetor de sensores e acumula na variável temp o valor da soma de todos as medidas.
+* Após, utiliza a quantidade de sensores (qtd_sensores) para calcular a média aritimética da medida dos sensores.
+* 
+* @param Sensor* sensores Vetor de sensores.
+* @param int qtd_sensores Quantidade de sensores no vetor.
+* 
+* @return double Média aritimética das medidas dos sensores do vetor.
+*/
 double calcular_media(const struct Sensor* sensores, int qtd_sensores) {
 	double temp = 0;
 	for (int i = 0; i < qtd_sensores; i++) {
@@ -93,6 +112,16 @@ double calcular_media(const struct Sensor* sensores, int qtd_sensores) {
 	return temp / qtd_sensores;
 }
 
+/**
+ * @brief Retorna o índice do sensor com maior medida.
+ *
+ * A função percorre o vetor de sensores e verifica qual possui maior medida. Ao final, retorna o índice deste elemento.
+ *
+ * @param Sensores* sensores Vetor de sensores.
+ * @param int qtd_sensores Quantidade de sensores no vetor.
+ * 
+ * @return int Indice do elemento que possui maior medida.
+ */
 int indice_maior(const struct Sensor* sensores, int qtd_sensores) {
 	int temp = 0;
 	for (int i = 0; i < qtd_sensores; i++) {
